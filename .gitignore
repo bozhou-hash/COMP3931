@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.env/
+
+# PyCharm
+.idea/
+
+# Model files
+saved_models/
+
+# Training results
+results/
+
+# OS files
+.DS_Store
+Thumbs.db
