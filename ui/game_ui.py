@@ -336,7 +336,6 @@ class GameUI:
             self.clock.tick(FPS)
             self.draw()
 
-            # Agent move with delay
             if not self.env.game_over and self.env.get_current_player() == agent.player:
                 if pending_agent_action is None:
                     pending_agent_action = agent.select_action(self.env)
