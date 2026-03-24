@@ -323,3 +323,66 @@ class GameUI:
 
         pygame.quit()
         sys.exit()
+
+    def run_human_vs_agent(self, agent, human_player=PLAYER_ONE):
+        running = True
+        self.restart_button_rect = None
+
+        agent_delay = 500  # milliseconds
+        agent_move_time = None
+        pending_agent_action = None
+
+        while running:
+            self.clock.tick(FPS)
+            self.draw()
+
+            # Agent move with delay
+            if not self.env.game_over and self.env.get_current_player() == agent.player:
+                if pending_agent_action is None:
+                    pending_agent_action = agent.select_action(self.env)
+                    agent_move_time = pygame.time.get_ticks()
+
+                if (
+                        pending_agent_action is not None
+                        and agent_move_time is not None
+                        and pygame.time.get_ticks() - agent_move_time >= agent_delay
+                ):
+                    self.env.drop_piece(pending_agent_action)
+                    pending_agent_action = None
+                    agent_move_time = None
+
+            else:
+                pending_agent_action = None
+                agent_move_time = None
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        running = False
+                    elif event.key == pygame.K_r:
+                        self.env.reset()
+                        self._result_recorded = False
+                        pending_agent_action = None
+                        agent_move_time = None
+
+                elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    if self.env.game_over:
+                        if self.restart_button_rect and self.restart_button_rect.collidepoint(event.pos):
+                            self.env.reset()
+                            self._result_recorded = False
+                            pending_agent_action = None
+                            agent_move_time = None
+                    else:
+                        if self.env.get_current_player() == human_player:
+                            mouse_x, _ = event.pos
+                            col = self.get_clicked_column(mouse_x)
+                            if col is not None:
+                                self.env.drop_piece(col)
+
+            pygame.display.flip()
+
+        pygame.quit()
+        sys.exit()
