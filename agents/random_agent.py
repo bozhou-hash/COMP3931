@@ -1,0 +1,12 @@
+import random
+
+
+class RandomAgent:
+    def __init__(self, player):
+        self.player = player
+
+    def select_action(self, env):
+        legal_actions = env.get_legal_actions()
+        if not legal_actions:
+            return None
+        return random.choice(legal_actions)
