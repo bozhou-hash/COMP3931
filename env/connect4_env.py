@@ -111,3 +111,12 @@ class Connect4Env:
         if not self.game_over:
             return None
         return self.winner
+
+    def clone(self):
+        cloned_env = Connect4Env()
+        cloned_env.starting_player = self.starting_player
+        cloned_env.board = self.board.copy()
+        cloned_env.current_player = self.current_player
+        cloned_env.winner = self.winner
+        cloned_env.game_over = self.game_over
+        return cloned_env
